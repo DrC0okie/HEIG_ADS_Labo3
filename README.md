@@ -70,9 +70,6 @@ Be, 9.0121831
 >  accesses which will not appear in the file. Choose a type of plot appropriate
 >  for this case.
 
-// todo
-
-## Task 3
 
 Command used: 
 
