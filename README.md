@@ -28,44 +28,103 @@ int main() {
 > 
 > a. `./out > file`
 
-// todo
+**What happens: ** `stdout` is redirected to the `file` file and `stderr` is not redirected
+**Explanation:** The `>` operator is used to redirect `stdout`  to a file named `file`. This means all `O` characters are redirected to `file`. However, since `stderr` is not redirected, the `E` characters appear on the terminal.
 
 > b. `./out 2> file` 
 
-// todo
+**What happens: ** `stdout` is not redirected whereas `stderr` is redirected to the `file` file.
+
+**Explanation: ** `2>` redirects only `stderr` (which is file descriptor 2) to `file`. So, the `O` characters appear  on the terminal since `stdout` is not redirected.
 
 > c. `./out > file 2>&1`
 
-// todo
+**What happens: ** Both `stdout` and `stderr` are redirected to the `file` file.
+
+**Explanation: **  `> file` redirects `stdout` to `file`, and `2>&1` redirects `stderr` to wherever `stdout` is currently going. Since `stdout` is going to `file`, `stderr` will also be redirected to `file`.
 
 > d. `./out 2>&1 > file`
 
-// todo
+**What happens: ** `stdout` is redirected to the `file` file, and `stderr` is not redirected.
+
+**Explanation: ** `2>&1` redirects `stderr` to wherever `stdout` is currently going, which is still the terminal at this point. Then, `> file` redirects `stdout` to `file`, but this does not affect `stderr`, which has already been redirected to `stdout`. As a result, `E` characters appear on the terminal, and `O` characters are saved in `file`.
 
 > e. `./out &> file`
 
-// todo
+**What happens:** Both `stdout` and `stderr` are redirected to the `file` file.
 
-> Run the following commands and tell where stdout and stderr are redirected to.
-> a. `./out > file`
+**Explanation: ** `&>` is a shortcut for redirecting both `stdout` and `stderr` to the same location, in this case, `file`. This means both `O` and `E` characters are redirected in `file`, and nothing appear on the terminal.
 
-// todo
+> What do the following commands do?
+> a. `cat /usr/share/doc/cron/README | grep -i edit`
 
-> b.`./out 2>&1 | grep –i eeeee`
+**Output:**
 
-// todo 
+```
+# * documentation (don't take credit for my work), mark your changes (don't
+have to go edit a couple of files... So, here's the checklist:
+        Edit config.h
+        Edit Makefile
+```
 
-> c. `./out 2>&1 >/dev/null | grep –i eeeee`
+**Explanation: ** This command combines  `cat` and `grep`, using a pipe `|`.
 
-// todo
+1. `cat /usr/share/doc/cron/README`: The `cat` command reads the file `README` and outputs its content to `stdout`.
+2. `|`: The pipe takes the `stdout` of the command on its left (here, the output of `cat`) and passes it as the `stdin` to the command on its right.
+3. `grep -i edit`: Searches its input for lines containing a match to the given pattern. The `-i` option makes the search case-insensitive. This command filters the input it receives and only outputs lines that contain the word "edit" in any case.
+
+> b.`./out 2>&1 | grep -i eeeee`
+
+**No output is produced**
+
+**Explanation: ** 
+
+1. `./out`: Outputs `O` to `stdout` and `E`s to `stderr`.
+2. `2>&1`: Redirects `stderr` to `stdout`. This means both `O` and `E` characters are sent to `stdout`.
+3. `| grep –i eeeee`: The pipe sends the output to `grep`, which searches for the pattern `eeeee` case-insensitively.
+
+Given that the program outputs alternating `O` and `E` characters, this command does not find any match, therefore, it does not produce any output.
+
+> c. `./out 2>&1 >/dev/null | grep -i eeeee`
+
+**No output is produced**
+
+**Explanation: **
+
+1. `./out`: Outputs `O` to `stdout` and `E`s to `stderr`.
+2. `2>&1`: Redirects `stderr` to `stdout`.
+3. `>/dev/null`: This redirects `stdout` to `/dev/null`, which is a special file that discards all data written to it.
+4. `| grep –i eeeee`: Since the `stdout` from `./out` is redirected to `/dev/null`, `grep` receives no input. Consequently, this command produce no output.
 
 > 3. Write commands to perform the following tasks:
 >
-> a. a. Produce a recursive listing, using ls , of files and directories in your home directory, including hidden files, in the file `/tmp/homefileslist`.
+> a. Produce a recursive listing, using ls , of files and directories in your home directory, including hidden files, in the file `/tmp/homefileslist`.
 
-// todo
+```bash
+ls -laR ~ > /tmp/homefileslist
+```
+
+**Explanation: **
+
+1. `-l`: This option tells `ls` to use a long listing format
+2. `-a`: Includes hidden entries (beggining by a `.`)
+3. `-R`: Recursively lists subdirectories.
+4. `~`: This is a shorthand for the user's home directory.
+5. `> /tmp/homefileslist`: Redirects the output of the `ls` command to `/tmp/homefileslist`.
 
 > b. Produce a (non-recursive) listing of all files in your home directory whose names end in .txt , .md or .pdf , in the file `/tmp/homedocumentslist`. The command must not display an error message if there are no corresponding files.
+```bash
+ls -a ~ | grep -E "\.(txt|md|pdf)$" > /tmp/homedocumentslist 2>/dev/null
+```
+
+**Explanation: **
+
+1. `ls -a ~`: Lists all files and directories in the user's home directory, including hidden ones.
+2. `| grep -E `: Uses `grep` to filter the list. The `-E` option allows the use of extended reg ex.
+3. `"\.(txt|md|pdf)$"`: looks for lines that end with `.txt`, `.md`, or `.pdf`. The `\` before the `.` is used to escape the dot.  `$` ensures the pattern matches at the end of the line.
+4. `> /tmp/homedocumentslist`: Redirects the output (the filtered list of files) to the specified file.
+5. `2>/dev/null`: Redirects any error messages to `/dev/null`,  discarding them.
+
 ## Task 2 : Log analysis
 
 > In this task you will use command line pipelines to analyse log data of a website. The website of a course at HEIG-VD is hosted on Amazon S3. When a user requests a page from the site or makes another type of access S3 writes a log entry to the log file. The log entry contains information about who made the access, what type of access it was, what page or resource was accessed, etc. 

@@ -1,0 +1,28 @@
+Task 1: Exercises on redirection
+Compile the following C++ program, called out.cpp , into an executable. The program
+writes a series of O characters on the stdout stream and a series of E characters
+on the stderr stream:
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+int main() {
+for (int i = 0; i < 5; ++i) {
+cout << "O";
+cerr << "E";
+}
+return EXIT_SUCCESS;
+}
+Run the executable with ./out
+1. Run the following commands and tell where stdout and stderr are redirected to.
+a. ./out > file b. ./out 2> file c. ./out > file 2>&1 d. ./out 2>&1 > file
+e. ./out &> file
+2. What do the following commands do?
+a. cat /usr/share/doc/cron/README | grep -i edit
+b. ./out 2>&1 | grep –i eeeee
+c. ./out 2>&1 >/dev/null | grep –i eeeee
+3. Write commands to perform the following tasks:
+a. Produce a recursive listing, using ls , of files and directories in your
+home directory, including hidden files, in the file /tmp/homefileslist .
+b. Produce a (non-recursive) listing of all files in your home directory whose
+names end in .txt , .md or .pdf , in the file /tmp/homedocumentslist . The
+command must not display an error message if there are no corresponding files.
