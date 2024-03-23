@@ -28,32 +28,33 @@ int main() {
 > 
 > a. `./out > file`
 
-**What happens: ** `stdout` is redirected to the `file` file and `stderr` is not redirected
+**What happens:** `stdout` is redirected to the `file` file and `stderr` is not redirected.
+
 **Explanation:** The `>` operator is used to redirect `stdout`  to a file named `file`. This means all `O` characters are redirected to `file`. However, since `stderr` is not redirected, the `E` characters appear on the terminal.
 
 > b. `./out 2> file` 
 
-**What happens: ** `stdout` is not redirected whereas `stderr` is redirected to the `file` file.
+**What happens:** `stdout` is not redirected whereas `stderr` is redirected to the `file` file.
 
-**Explanation: ** `2>` redirects only `stderr` (which is file descriptor 2) to `file`. So, the `O` characters appear  on the terminal since `stdout` is not redirected.
+**Explanation:** `2>` redirects only `stderr` (which is file descriptor 2) to `file`. So, the `O` characters appear  on the terminal since `stdout` is not redirected.
 
 > c. `./out > file 2>&1`
 
-**What happens: ** Both `stdout` and `stderr` are redirected to the `file` file.
+**What happens:** Both `stdout` and `stderr` are redirected to the `file` file.
 
-**Explanation: **  `> file` redirects `stdout` to `file`, and `2>&1` redirects `stderr` to wherever `stdout` is currently going. Since `stdout` is going to `file`, `stderr` will also be redirected to `file`.
+**Explanation:**  `> file` redirects `stdout` to `file` and `2>&1` redirects `stderr` to wherever `stdout` is currently going. Since `stdout` is going to `file`, `stderr` will also be redirected to `file`.
 
 > d. `./out 2>&1 > file`
 
-**What happens: ** `stdout` is redirected to the `file` file, and `stderr` is not redirected.
+**What happens:** `stdout` is redirected to the `file` file, and `stderr` is not redirected.
 
-**Explanation: ** `2>&1` redirects `stderr` to wherever `stdout` is currently going, which is still the terminal at this point. Then, `> file` redirects `stdout` to `file`, but this does not affect `stderr`, which has already been redirected to `stdout`. As a result, `E` characters appear on the terminal, and `O` characters are saved in `file`.
+**Explanation:** `2>&1` redirects `stderr` to wherever `stdout` is currently going, which is still the terminal at this point. Then, `> file` redirects `stdout` to `file`, but this does not affect `stderr`, which has already been redirected to `stdout`. As a result, `E` characters appear on the terminal, and `O` characters are saved in `file`.
 
 > e. `./out &> file`
 
 **What happens:** Both `stdout` and `stderr` are redirected to the `file` file.
 
-**Explanation: ** `&>` is a shortcut for redirecting both `stdout` and `stderr` to the same location, in this case, `file`. This means both `O` and `E` characters are redirected in `file`, and nothing appear on the terminal.
+**Explanation:** `&>` is a shortcut for redirecting both `stdout` and `stderr` to the same location, in this case, `file`. This means both `O` and `E` characters are redirected in `file`, and nothing appear on the terminal.
 
 > What do the following commands do?
 > a. `cat /usr/share/doc/cron/README | grep -i edit`
@@ -67,7 +68,7 @@ have to go edit a couple of files... So, here's the checklist:
         Edit Makefile
 ```
 
-**Explanation: ** This command combines  `cat` and `grep`, using a pipe `|`.
+**Explanation:** This command combines  `cat` and `grep`, using a pipe `|`.
 
 1. `cat /usr/share/doc/cron/README`: The `cat` command reads the file `README` and outputs its content to `stdout`.
 2. `|`: The pipe takes the `stdout` of the command on its left (here, the output of `cat`) and passes it as the `stdin` to the command on its right.
@@ -77,7 +78,7 @@ have to go edit a couple of files... So, here's the checklist:
 
 **No output is produced**
 
-**Explanation: ** 
+**Explanation:** 
 
 1. `./out`: Outputs `O` to `stdout` and `E`s to `stderr`.
 2. `2>&1`: Redirects `stderr` to `stdout`. This means both `O` and `E` characters are sent to `stdout`.
@@ -89,7 +90,7 @@ Given that the program outputs alternating `O` and `E` characters, this command 
 
 **No output is produced**
 
-**Explanation: **
+**Explanation:**
 
 1. `./out`: Outputs `O` to `stdout` and `E`s to `stderr`.
 2. `2>&1`: Redirects `stderr` to `stdout`.
@@ -104,7 +105,7 @@ Given that the program outputs alternating `O` and `E` characters, this command 
 ls -laR ~ > /tmp/homefileslist
 ```
 
-**Explanation: **
+**Explanation:**
 
 1. `-l`: This option tells `ls` to use a long listing format
 2. `-a`: Includes hidden entries (beggining by a `.`)
@@ -117,7 +118,7 @@ ls -laR ~ > /tmp/homefileslist
 ls -a ~ | grep -E "\.(txt|md|pdf)$" > /tmp/homedocumentslist 2>/dev/null
 ```
 
-**Explanation: **
+**Explanation:**
 
 1. `ls -a ~`: Lists all files and directories in the user's home directory, including hidden ones.
 2. `| grep -E `: Uses `grep` to filter the list. The `-E` option allows the use of extended reg ex.
@@ -146,11 +147,12 @@ ls -a ~ | grep -E "\.(txt|md|pdf)$" > /tmp/homedocumentslist 2>/dev/null
 >
 > Answer the following question by using the command line and building a pipeline of commands. You can use ??`cat` , `grep` , `cut` , `tr` , `wc` , `sort` , `uniq` , `head` and `tail`. For each question give the answer and the pipeline you used to arrive at the answer.
 >
+
 > 1. How many log entries are in the file?
 
 **Answer:**
 
-There is 2781 lines
+There is 2781 lineswc
 
 **Command used:**
 
@@ -360,16 +362,6 @@ cut -f17 ads_website.log | sort | uniq -c | sort -nr | head -1
 
 **Answer:**
 
-**Commands used:**
-
-**Output:**
-
-**Explanation:**
-
-> 9. Read the documentation for the tee command. Repeat the analysis of the previous question for browsers running on Windows and insert tee into the pipeline such that the user agent strings (including repeats) are written to a file for further analysis (the filename should be useragents.txt ).
-
-**Answer:**
-
 There is 1751 asks made from browsers running on Windows, 180 on Linux and 693 on Mac OS X.
 
 **Commands used and outpt:**
@@ -399,6 +391,20 @@ grep -i "Windows" ads_website.log | wc -l
 
 - **`grep -i "xxxxx" ads_website.log`**: This command looks for lines in the log file (`ads_website.log`) that contain the word "xxxxxx" replace by "Windows", "Linux" or "Mac OS X", ignoring case (`-i` for case-insensitive). This is used to identify accesses from Windows browsers.
 - **`wc -l`**: This counts the number of lines returned by the `grep` command, which corresponds to the number of accesses from Windows.
+
+> 9. Read the documentation for the tee command. Repeat the analysis of the previous question for browsers running on Windows and insert tee into the pipeline such that the user agent strings (including repeats) are written to a file for further analysis (the filename should be useragents.txt ).
+
+
+**Command used:**
+```bash
+cut -f17 ads_website.log | tee -a useragents.txt 
+```
+ 
+see [useragents](/part2/useragents.txt)
+
+**Explanation:**
+tee is a simple tool to copy a standard input and write to a standard output. So that's what the command does. It takes only the "useragent" part of the log file and writes it (appends it if we don't want to lose what is already in it) to useragents.txt.
+
 
 > As mentioned previously, the log you are analysing in this task was reformatted so that the fields are separated by tabs. A normal web server log typically uses spaces. You can see an example of such a log in the file access.log [access.log](http://ads.iict.ch/access.log).
 >
@@ -433,6 +439,21 @@ Be, 9.0121831
 ```bash
 grep -o '\[[0-9]*/[A-Z][a-z]*/[0-9]*:[0-9]*:[0-9]*' ads_website.log | cut -d'/' -f1-2 | sort | uniq -c | tr -d  '[' | sed -e 's/^ *//;s/ /,/'> accesses.csv
 ```
+
+**Output**:
+See [accesses](part3/accesses.csv)
+
+**Explanation**:
+
+`grep -o` only print the part captured in the regex.
+The regex grabs what should be an IP address and a timestamp. 
+
+`cut -d'/' -f1-2 | sort` This step isolates the IP address and the first directory section of the path, assuming the pattern matched an IP address. Sort will sort the data alphabetically.
+
+` uniq -c | tr -d '['`This step generates a list with each unique combination followed by its count, representing the number of times that specific IP accessed that directory section.
+
+`sed -e 's/^ //;s/ /,/'> accesses.csv`This final step formats the data into a comma-separated format (CSV) suitable for import into spreadsheets or further analysis. The leading spaces and spaces between IP and count are removed, and commas are inserted to create a CSV file.
+
 
 To create the csv, I used python. it can be easily run by doing:
 
