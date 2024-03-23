@@ -399,11 +399,14 @@ grep -i "Windows" ads_website.log | wc -l
 ```bash
 cut -f17 ads_website.log | tee -a useragents.txt 
 ```
- 
+
 see [useragents](/part2/useragents.txt)
 
 **Explanation:**
-tee is a simple tool to copy a standard input and write to a standard output. So that's what the command does. It takes only the "useragent" part of the log file and writes it (appends it if we don't want to lose what is already in it) to useragents.txt.
+
+- `cut -f17 ads_website.log`: This portion uses the `cut` command to select the 17th field from each line in the file `ads_website.log`. Fields are assumed to be separated by tabs (the default delimiter for `cut`), meaning it’s extracting the 17th piece of data from each line, which could be something like a user agent string if this is structured log data.
+- `|`: This is a pipe. It takes the output from the command on the left (`cut`) and passes it as input to the command on the right (`tee`).
+- `tee -a useragents.txt`: The `tee` command reads from standard input and writes to standard output and to a file. The `-a` option means it appends the output to the end of `useragents.txt` rather than overwriting the file. This means that the 17th field from each line of `ads_website.log` (likely user agent strings if the log format is consistent) will be added to the `useragents.txt` file while also being shown in the terminal.
 
 
 > As mentioned previously, the log you are analysing in this task was reformatted so that the fields are separated by tabs. A normal web server log typically uses spaces. You can see an example of such a log in the file access.log [access.log](http://ads.iict.ch/access.log).
@@ -445,15 +448,14 @@ See [accesses](part3/accesses.csv)
 
 **Explanation**:
 
-`grep -o` only print the part captured in the regex.
-The regex grabs what should be an IP address and a timestamp. 
+- `grep -o` only print the part captured in the regex.
+  The regex grabs what should be an IP address and a timestamp. 
 
-`cut -d'/' -f1-2 | sort` This step isolates the IP address and the first directory section of the path, assuming the pattern matched an IP address. Sort will sort the data alphabetically.
+- `cut -d'/' -f1-2 | sort` This step isolates the IP address and the first directory section of the path, assuming the pattern matched an IP address. Sort will sort the data alphabetically.
 
-` uniq -c | tr -d '['`This step generates a list with each unique combination followed by its count, representing the number of times that specific IP accessed that directory section.
+- ` uniq -c | tr -d '['`This step generates a list with each unique combination followed by its count, representing the number of times that specific IP accessed that directory section.
 
-`sed -e 's/^ //;s/ /,/'> accesses.csv`This final step formats the data into a comma-separated format (CSV) suitable for import into spreadsheets or further analysis. The leading spaces and spaces between IP and count are removed, and commas are inserted to create a CSV file.
-
+- `sed -e 's/^ //;s/ /,/'> accesses.csv`This final step formats the data into a comma-separated format (CSV) suitable for import into spreadsheets or further analysis. The leading spaces and spaces between IP and count are removed, and commas are inserted to create a CSV file.
 
 To create the csv, I used python. it can be easily run by doing:
 
